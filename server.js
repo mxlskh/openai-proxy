@@ -9,6 +9,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Healthcheck route
+app.get('/', (req, res) => {
+  res.send('Proxy is alive!');
+});
+
 // OpenAI proxy (как было)
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 app.post('/api/chat', async (req, res) => {
