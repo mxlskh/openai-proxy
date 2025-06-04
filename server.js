@@ -56,3 +56,23 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Proxy listening on port ${PORT}`);
 });
+
+// Прокси для /api/tts
+app.post('/api/tts', async (req, res) => {
+  try {
+    // Прокидываем запрос на твой backend (например, локальный или Railway backend)
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:3001/api/tts';
+    const response = await fetch(backendUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req.body)
+    });
+    const data = await response.json();
+    res.status(response.status).json(data);
+  } catch (err) {
+    console.error('TTS proxy error:', err);
+    res.status(500).json({ error: 'TTS Proxy Error' });
+  }
+});
